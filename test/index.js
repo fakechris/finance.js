@@ -133,4 +133,22 @@ describe('FinanceJS', function() {
   it('should compute stockPV', function() {
     cal.stockPV(5, 15, 10).should.equal(105);
   });
+
+  it('should compute monthRateToYear', function() {
+    Number(cal.monthRateToYear(12, 0.0115).toFixed(5)).should.equal(0.24565);
+  });
+
+  it('should compute yearRateToMonth', function() {
+    Number(cal.yearRateToMonth(12, 0.24565).toFixed(5)).should.equal(0.0115);
+  });
+
+  it('should compute XYPlan', function() {
+    cal.XYPlan(0.01, 6, 0.01, 12, 10000).cashFlow.should.deep.equal([-10000, 100,100,100,100,100,100,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334]);
+  });
+
+  it('should compute XYIRR', function() {
+    cal.XYIRR(0.0105, 6, 0.0105, 18).should.equal(0.18599999999999994);
+  });
+
+
 });

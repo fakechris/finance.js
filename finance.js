@@ -283,6 +283,66 @@ Finance.prototype.stockPV = function (g, ke, D0) {
   return Math.round(valueOfStock)
 }
 
+Finance.prototype.monthRateToYear = function(numOfPayments, rate) {
+  return this.RATE(numOfPayments, 1/12 + rate, -1, 0, 0) * 12;
+}
+
+Finance.prototype.yearRateToMonth = function(numOfPayments, rate) {
+  rate = rate/12;
+  pmt = (1 * rate) / (1 - Math.pow(1 + rate, -numOfPayments));
+  return pmt - 1/12;
+}
+
+Finance.prototype.XYPlan = function(xRate, xNumOfPayments, yRate, yNumofPayments, principal) {
+  var data = {
+    depth : 10000,
+    cashFlow : []
+  };
+  data.cashFlow.push(-principal);
+
+  xReturn = xRate * principal;
+  for (i = 0; i < xNumOfPayments; i++) {
+    data.cashFlow.push(xReturn);
+  }
+
+  yReturn = principal / yNumofPayments + yRate * principal;
+  for (i = 0; i < yNumofPayments; i++) {
+    data.cashFlow.push(yReturn);
+  }
+  return data;
+}
+
+Finance.prototype.IRR2 = function(cfs) {
+  var depth = cfs.depth;
+  var args = cfs.cashFlow;
+  var numberOfTries = 1;
+  // Cash flow values must contain at least one positive value and one negative value
+  var positive, negative;
+  Array.prototype.slice.call(args).forEach(function (value) {
+    if (value > 0) positive = true;
+    if (value < 0) negative = true;
+  })
+  if (!positive || !negative) throw new Error('IRR requires at least one positive value and one negative value');
+  function npv(rate) {
+    numberOfTries++;
+    if (numberOfTries > depth) {
+      throw new Error('IRR can\'t find a result');
+    }
+    var rrate = (1 + rate/100);
+    var npv = args[0];
+    for (var i = 1; i < args.length; i++) {
+      npv += (args[i] / Math.pow(rrate, i));
+    }
+    return npv;
+  }
+  return seekZero(npv);
+};
+
+Finance.prototype.XYIRR = function(xRate, xNumOfPayments, yRate, yNumofPayments) {
+  plan = this.XYPlan(xRate, xNumOfPayments, yRate, yNumofPayments, 10000);
+  return this.IRR2(plan) * 12 / 100;
+}
+
 //Returns Sum of f(x)/f'(x)
 function sumEq(cfs, durs, guess) {
   var sum_fx = 0;
