@@ -283,11 +283,11 @@ Finance.prototype.stockPV = function (g, ke, D0) {
   return Math.round(valueOfStock)
 }
 
-Finance.prototype.monthRateToYear = function(numOfPayments, rate) {
+Finance.prototype.monthRateToIRR = function(numOfPayments, rate) {
   return this.RATE(numOfPayments, 1/12 + rate, -1, 0, 0) * 12;
 }
 
-Finance.prototype.yearRateToMonth = function(numOfPayments, rate) {
+Finance.prototype.IRRToMonthRate = function(numOfPayments, rate) {
   rate = rate/12;
   pmt = (1 * rate) / (1 - Math.pow(1 + rate, -numOfPayments));
   return pmt - 1/12;

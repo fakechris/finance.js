@@ -120,10 +120,6 @@ describe('FinanceJS', function() {
     cal.IAR(0.08, 0.03).should.equal(4.854368932038833);
   });
 
-  it('should compute RATE', function() {
-    Number(cal.RATE(12, -933.33, 10000, 0, 0).toFixed(5)).should.equal(0.01788);
-  });
-
   it('should compute XIRR', function() {
     cal.XIRR([-1000, -100, 1200],[new Date(2015, 11, 1 ), new Date(2016, 7, 1 ), new Date(2016, 7, 19 )],0 ).should.equal(14.11);
   });
@@ -134,21 +130,28 @@ describe('FinanceJS', function() {
     cal.stockPV(5, 15, 10).should.equal(105);
   });
 
-  it('should compute monthRateToYear', function() {
-    Number(cal.monthRateToYear(12, 0.0115).toFixed(5)).should.equal(0.24565);
+  it('should compute RATE', function() {
+    Number(cal.RATE(12, -933.33, 10000, 0, 0).toFixed(5)).should.equal(0.01788);
   });
 
-  it('should compute yearRateToMonth', function() {
-    Number(cal.yearRateToMonth(12, 0.24565).toFixed(5)).should.equal(0.0115);
+  it('should compute monthRateToIRR', function() {
+    Number(cal.monthRateToIRR(12, 0.0115).toFixed(5)).should.equal(0.24565);
+  });
+
+  it('should compute IRRToMonthRate', function() {
+    Number(cal.IRRToMonthRate(12, 0.24565).toFixed(5)).should.equal(0.0115);
   });
 
   it('should compute XYPlan', function() {
-    cal.XYPlan(0.01, 6, 0.01, 12, 10000).cashFlow.should.deep.equal([-10000, 100,100,100,100,100,100,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334]);
+    cal.XYPlan(0.01, 6, 0.01, 12, 10000).cashFlow.should.deep
+    .equal([-10000,100,100,100,100,100,100,
+      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,
+      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,
+      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334]);
   });
 
   it('should compute XYIRR', function() {
-    cal.XYIRR(0.0105, 6, 0.0105, 18).should.equal(0.18599999999999994);
+    Number(cal.XYIRR(0.0105, 6, 0.0105, 18).toFixed(5)).should.equal(0.1860);
   });
-
 
 });
