@@ -150,8 +150,21 @@ describe('FinanceJS', function() {
       933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334]);
   });
 
+
   it('should compute XYIRR', function() {
     Number(cal.XYIRR(0.0105, 6, 0.0105, 18).toFixed(5)).should.equal(0.1860);
+  });
+
+  it('should compute XYPlanDiff', function() {
+    cal.XYPlanDiff(0.011, 6, 0.011, 12, 0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12, 20000).should.deep
+    .equal([-20000,37.5,37.5,37.5,37.5,37.5,37.5,
+      119.49991331583988,119.49991331583988,119.49991331583988,119.49991331583988,
+      119.49991331583988,119.49991331583988,119.49991331583988,119.49991331583988,
+      119.49991331583988,119.49991331583988,119.49991331583988,119.49991331583988]);
+  });
+
+  it('should compute XYPlanDiffIRR', function() {
+    Number(cal.XYPlanDiffIRR(0.011, 6, 0.011, 12, 0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12).toFixed(5)).should.equal(0.078);
   });
 
 });

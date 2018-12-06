@@ -343,6 +343,35 @@ Finance.prototype.XYIRR = function(xRate, xNumOfPayments, yRate, yNumofPayments)
   return this.IRR2(plan) * 12 / 100;
 }
 
+Finance.prototype.XYPlanDiff = function(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv) {
+  plan1 = this.XYPlan(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, pv);
+  plan2 = this.XYPlan(xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
+  cashFlow = plan1.cashFlow.map(function(num, idx) {
+    return num - plan2.cashFlow[idx];
+  });
+  cashFlow[0] = plan1.cashFlow[0];
+
+  return cashFlow;
+}
+
+Finance.prototype.XYPlanDiffIRR = function(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2) {
+  pv = 10000;
+  cashFlow = this.XYPlanDiff(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
+  cashFlowX = cashFlow.map(function(num, idx) {
+    p = 0;
+    if (idx > xNumOfPayments2) {
+      p = pv / yNumofPayments2;
+    }
+    return num + p;
+  });
+
+  var data = {
+    depth : 10000,
+    cashFlow : cashFlowX
+  };
+  return this.IRR2(data) * 12 / 100;
+}
+
 //Returns Sum of f(x)/f'(x)
 function sumEq(cfs, durs, guess) {
   var sum_fx = 0;
