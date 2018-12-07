@@ -312,6 +312,17 @@ Finance.prototype.XYPlan = function(xRate, xNumOfPayments, yRate, yNumofPayments
   return data;
 }
 
+function seekZero2(fn) {
+  var x = 1;
+  while (fn(x) > 0) {
+    x += 1;
+  }
+  while (fn(x) < 0) {
+    x -= 0.0001
+  }
+  return x + 0.0001;
+}
+
 Finance.prototype.IRR2 = function(cfs) {
   var depth = cfs.depth;
   var args = cfs.cashFlow;
@@ -335,7 +346,8 @@ Finance.prototype.IRR2 = function(cfs) {
     }
     return npv;
   }
-  return seekZero(npv);
+
+  return seekZero2(npv);
 };
 
 Finance.prototype.XYIRR = function(xRate, xNumOfPayments, yRate, yNumofPayments) {

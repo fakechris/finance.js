@@ -139,20 +139,24 @@ describe('FinanceJS', function() {
   });
 
   it('should compute IRRToMonthRate', function() {
-    Number(cal.IRRToMonthRate(12, 0.24565).toFixed(5)).should.equal(0.0115);
+    Number(cal.IRRToMonthRate(12, 0.1095).toFixed(5)).should.equal(0.00503);
   });
 
   it('should compute XYPlan', function() {
-    cal.XYPlan(0.01, 6, 0.01, 12, 10000).cashFlow.should.deep
-    .equal([-10000,100,100,100,100,100,100,
-      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,
-      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334,
-      933.3333333333334,933.3333333333334,933.3333333333334,933.3333333333334]);
+    cal.XYPlan(0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12, 10000).cashFlow.should.deep
+    .equal([-10000,91.25,91.25,91.25,91.25,91.25,91.25,
+      883.5833766754134,883.5833766754134,883.5833766754134,883.5833766754134,
+      883.5833766754134,883.5833766754134,883.5833766754134,883.5833766754134,
+      883.5833766754134,883.5833766754134,883.5833766754134,883.5833766754134]);
   });
 
-
   it('should compute XYIRR', function() {
-    Number(cal.XYIRR(0.0105, 6, 0.0105, 18).toFixed(5)).should.equal(0.1860);
+    var data = {
+      depth : 10000,
+      cashFlow : [-10000,933.33,933.33,933.33,933.33,933.33,933.33,933.33,933.33,933.33,933.33,933.33,933.33]
+    };
+    Number(cal.IRR2(data).toFixed(5)).should.equal(1.7881)
+    Number(cal.XYIRR(0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12).toFixed(5)).should.equal(0.1095);
   });
 
   it('should compute XYPlanDiff', function() {
@@ -164,7 +168,8 @@ describe('FinanceJS', function() {
   });
 
   it('should compute XYPlanDiffIRR', function() {
-    Number(cal.XYPlanDiffIRR(0.011, 6, 0.011, 12, 0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12).toFixed(5)).should.equal(0.078);
+    Number(cal.XYPlanDiffIRR(0.011, 6, 0.011, 12, 0.1095/12, 6, cal.IRRToMonthRate(12, 0.1095), 12).toFixed(5)).should.equal(0.07759);
+    //Number(cal.XYPlanDiffIRR(0.011, 6, 0.011, 12, 0.10/12, 6, cal.IRRToMonthRate(12, 0.10), 12).toFixed(5)).should.equal(0.078);
   });
 
 });
