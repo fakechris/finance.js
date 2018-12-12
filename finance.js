@@ -370,7 +370,7 @@ Finance.prototype.XYPlanDiffIRR = function(xRate1, xNumOfPayments1, yRate1, yNum
   var pv = 10000;
   var cashFlow = this.XYPlanDiff(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
   var cashFlowX = cashFlow.map(function(num, idx) {
-    p = 0;
+    var p = 0;
     if (idx > xNumOfPayments2) {
       p = pv / yNumofPayments2;
     }
