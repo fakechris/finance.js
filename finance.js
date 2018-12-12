@@ -224,8 +224,8 @@ Finance.prototype.RATE = function(numOfPayments, pmt, pv, fv, when) {
   return guess;
 
   function guess_diff(guess, nper, pmt, pv, fv, when) {
-    t1 = Math.pow((guess+1), nper);
-    t2 = Math.pow((guess+1), nper-1);
+    var t1 = Math.pow((guess+1), nper);
+    var t2 = Math.pow((guess+1), nper-1);
     return ((fv + t1*pv + pmt*(t1 - 1)*(guess*when + 1)/guess) /
                 (nper*t2*pv - pmt*(t1 - 1)*(guess*when + 1)/Math.pow(guess,2) + nper*pmt*t2*(guess*when + 1)/guess +
                  pmt*(t1 - 1)*when/guess));
@@ -289,7 +289,7 @@ Finance.prototype.monthRateToIRR = function(numOfPayments, rate) {
 
 Finance.prototype.IRRToMonthRate = function(numOfPayments, rate) {
   rate = rate/12;
-  pmt = (1 * rate) / (1 - Math.pow(1 + rate, -numOfPayments));
+  var pmt = (1 * rate) / (1 - Math.pow(1 + rate, -numOfPayments));
   return pmt - 1/12;
 }
 
@@ -300,12 +300,12 @@ Finance.prototype.XYPlan = function(xRate, xNumOfPayments, yRate, yNumofPayments
   };
   data.cashFlow.push(-principal);
 
-  xReturn = xRate * principal;
-  for (i = 0; i < xNumOfPayments; i++) {
+  var xReturn = xRate * principal;
+  for (var i = 0; i < xNumOfPayments; i++) {
     data.cashFlow.push(xReturn);
   }
 
-  yReturn = principal / yNumofPayments + yRate * principal;
+  var yReturn = principal / yNumofPayments + yRate * principal;
   for (i = 0; i < yNumofPayments; i++) {
     data.cashFlow.push(yReturn);
   }
@@ -351,14 +351,14 @@ Finance.prototype.IRR2 = function(cfs) {
 };
 
 Finance.prototype.XYIRR = function(xRate, xNumOfPayments, yRate, yNumofPayments) {
-  plan = this.XYPlan(xRate, xNumOfPayments, yRate, yNumofPayments, 10000);
+  var plan = this.XYPlan(xRate, xNumOfPayments, yRate, yNumofPayments, 10000);
   return this.IRR2(plan) * 12 / 100;
 }
 
 Finance.prototype.XYPlanDiff = function(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv) {
-  plan1 = this.XYPlan(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, pv);
-  plan2 = this.XYPlan(xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
-  cashFlow = plan1.cashFlow.map(function(num, idx) {
+  var plan1 = this.XYPlan(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, pv);
+  var plan2 = this.XYPlan(xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
+  var cashFlow = plan1.cashFlow.map(function(num, idx) {
     return num - plan2.cashFlow[idx];
   });
   cashFlow[0] = plan1.cashFlow[0];
@@ -367,9 +367,9 @@ Finance.prototype.XYPlanDiff = function(xRate1, xNumOfPayments1, yRate1, yNumofP
 }
 
 Finance.prototype.XYPlanDiffIRR = function(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2) {
-  pv = 10000;
-  cashFlow = this.XYPlanDiff(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
-  cashFlowX = cashFlow.map(function(num, idx) {
+  var pv = 10000;
+  var cashFlow = this.XYPlanDiff(xRate1, xNumOfPayments1, yRate1, yNumofPayments1, xRate2, xNumOfPayments2, yRate2, yNumofPayments2, pv);
+  var cashFlowX = cashFlow.map(function(num, idx) {
     p = 0;
     if (idx > xNumOfPayments2) {
       p = pv / yNumofPayments2;
