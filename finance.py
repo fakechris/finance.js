@@ -96,7 +96,7 @@ class YPlans:
     >>> yp.add3(mon, 2000000, xy_intrerest1, 0.1095)
     >>> yp.add3(mon, 4000000, xy_intrerest2, 0.1095)
     >>> yp.add3(mon, 4000000, xy_intrerest3, 0.1095)
-    >>> yp.add_batch(
+    >>> yp.add_batch_scale(
     ...    (
     ...        ((2000000, xy_intrerest1, 0.1095),
     ...         (4000000, xy_intrerest2, 0.1095),
@@ -129,11 +129,11 @@ class YPlans:
     ...         (4000000, xy_intrerest2, 0.1095),
     ...         (4000000, xy_intrerest3, 0.1095),),
     ...    ),
-    ...    from_month_idx = 2
+    ...    from_month_idx = 2, pv_scale=1.0
     ... )
     >>> #yp.month_plan
     >>> yp.principles
-    [-10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000, -10000000]
+    [-10000000, -10000000, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0, -10000000.0]
     >>> #yp.revenues
     >>> yp.merge()
     >>> [round(f,2) for f in list(yp.merge_rev)]
@@ -182,6 +182,13 @@ class YPlans:
         for plan in plan_tuples:
             for p in plan:
                 self.add3(mon_idx, p[0], p[1], p[2])
+            mon_idx += 1
+
+    def add_batch_scale(self, plan_tuples, from_month_idx=0, pv_scale=1.0, irr_scale=1.0):
+        mon_idx = from_month_idx
+        for plan in plan_tuples:
+            for p in plan:
+                self.add3(mon_idx, p[0]*pv_scale, p[1], p[2]*irr_scale)
             mon_idx += 1
 
     def merge(self):
